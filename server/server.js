@@ -58,12 +58,22 @@ app.get('/sloturi', (req, res) => {
     return res.status(400).json({ error: 'Data și barberul sunt obligatorii!' });
   }
 
+  const azi = new Date().toISOString().split('T')[0];
+  const acum = new Date();
+  const oraAcum = `${String(acum.getHours()).padStart(2,'0')}:${String(acum.getMinutes()).padStart(2,'0')}`;
+
   const rezervateRows = db.prepare(
     'SELECT ora FROM rezervari WHERE data = ? AND barber = ?'
   ).all(data, barber);
 
   const rezervate = rezervateRows.map(r => r.ora);
-  const disponibile = SLOTURI.filter(slot => !rezervate.includes(slot));
+
+  let disponibile = SLOTURI.filter(slot => {
+    if (rezervate.includes(slot)) return false;
+    // Dacă e azi, blochează orele trecute
+    if (data === azi && slot <= oraAcum) return false;
+    return true;
+  });
 
   res.json({ disponibile, rezervate });
 });
@@ -190,5 +200,14 @@ app.get('/admin/rezervari', (req, res) => {
   }
   const toate = db.prepare('SELECT * FROM rezervari ORDER BY data ASC, ora ASC').all();
   res.json(toate);
+});
+
+// Test conexiune email
+transporter.verify((error, success) => {
+  if (error) {
+    console.log('Eroare email:', error);
+  } else {
+    console.log('Email configurat corect!');
+  }
 });
 });
