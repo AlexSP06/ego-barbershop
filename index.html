@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EGO Barbershop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ro.js"></script>
+  <script src="js/main.js"></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+        <a href="#home" class="nav-logo" style="font-size: 3rem; font-family: var(--font-display);">EGO<span>.</span></a>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#servicii">Servicii</a></li>
+            <li><a href="#echipa">Echipa</a></li>
+            <li><a href="#galerie">Galerie</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#formular" class="nav-cta">Rezerva</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="hero-bg">
+        <div class="hero-overlay"></div>
+    </div>
+    <div class="container hero-content">
+        <div class="hero-text">
+            <span class="section-label">Zalău · Est. 2020</span>
+            <h1 class="hero-title">
+                Arta de a <br>
+                arăta<span>bine.</span>
+            </h1>
+            <p class="hero-desc">
+                Tuns, bărbierit și styling de precizie.<br>
+                Experiența unui barbershop premium, în inima oralului.
+            </p>
+            <div class="hero-btns">
+                <a href="#formular" class="btn btn-gold">Rezervă acum</a>
+                <a href="#servicii" class="btn btn-outline">Vezi servicii</a>
+            </div>
+        </div>
+        <div class="hero-badge">
+            <svg viewBox="0 0 180 180" class="badge-svg">
+                <defs>
+                    <path id="circle-text"
+                        d="M 90,90 m -65,0 a 65,65 0 1,1 130,0 a 65,65 0 1,1 -130,0"
+                    />
+                </defs>
+                <text font-family="'Barlow Condensed', sans-serif" font-size="11"
+                     font-weight="700" letter-spacing="6" fill="#c9a84c">
+                <textPath href="#circle-text">
+                    PREMIUM · BARBERSHOP · ZALĂU ·
+                </textPath>
+                </text>
+            </svg>
+        <div class="badge-center">EGO</div>
+        </div>
+        <div class="hero-scroll">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </div>
+  </section>
+
+  <!-- SERVICII -->
+  <section id="servicii" class="services">
+    <div class="container">
+        <div class="service-header">
+            <span class="section-label">Ce oferim</span>
+            <h2 class="section-title">Servicii <span>premium</span></h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">✂️</div>
+                <h3>Tuns Clasic</h3>
+                <p>Tuns precis adaptat formei feței, finisaj profesional și styling inclus</p>
+                <div class="service-price">70 <span>RON</span></div>
+            </div>
+
+            <div class="service-card featured">
+                <div class="service-badge-card">Popular</div>
+                <div class="service-icon">👑</div>
+                <h3>Pachet complet</h3>
+                <p>Tuns + barbierit + styling</p>
+                <div class="service-price">120 <span>RON</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🪒</div>
+                <h3>Barbierit</h3>
+                <p>Barbierit precis pentru a-ți forma barba perfect</p>
+                <div class="service-price">50 <span>RON</span></div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">👦</div>
+                <h3>Tuns Copii</h3>
+                <p>Tuns adaptat pentru cei mici, într-un mediu prietenos și relaxant</p>
+                <div class="service-price">40 <span>RON</span></div>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- ECHIPA -->
+  <section id="echipa" class="team">
+    <div class="container">
+        <div class="team-header">
+            <span class="section-label">Echipa noastră</span>
+            <h2 class="section-title">Echipa <span>EGO</span></h2>
+        </div>
+        <div class="team-grid">
+
+            <div class="team-card">
+                <div class="team-img-wrap">
+                    <img src="   " alt="Barber 1">
+                    <div class="team-overlay">
+                        <p>"Precizia e totul."</p>
+                    </div>
+                </div>
+                <div class="team-info">
+                    <h3>Andrei</h3>
+                    <span>Senior Barber</span>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <div class="team_img-wrap">
+                    <img src="   " alt="Barber 2">
+                    <div class="team-overlay">
+                        <p>Stilul te defineste</p>
+                    </div>
+                </div>
+                <div class="team-info">
+                    <h3>Mihai Rus</h3>
+                    <span>Master Barber</span>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <div class="team-img-wrap">
+                    <img src=" " alt="Barber 3">
+                    <div class="team-overlay">
+                        <p>„Fiecare tuns, o operă.”</p>
+                    </div>
+                </div>
+                <div class="team-info">
+                    <h3>Vlad Mureșan</h3>
+                    <span>Barber · 3 ani experiență</span>
+                </div>
+            </div>
+      </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- GALERIE -->
+  <section id="galerie" class="gallery">
+    <div class="container">
+        <div class="gallery-header">
+            <span class="section-label">Munca noastră</span>
+            <h2 class="section-title">Galerie <span>EGO</span></h2>
+        </div>
+    </div>
+    <div class="gallery-grid">
+  <div class="gallery-item">
+    <img src="assets/images/g1.jpg" alt="Lucrare 1">
+    <div class="gallery-item-overlay"><span>+</span></div>
+  </div>
+  <div class="gallery-item">
+    <img src="assets/images/g2.jpg" alt="Lucrare 2">
+    <div class="gallery-item-overlay"><span>+</span></div>
+  </div>
+  <div class="gallery-item">
+    <img src="assets/images/g3.jpg" alt="Lucrare 3">
+    <div class="gallery-item-overlay"><span>+</span></div>
+  </div>
+  <div class="gallery-item">
+    <img src="assets/images/g4.jpg" alt="Lucrare 4">
+    <div class="gallery-item-overlay"><span>+</span></div>
+  </div>
+  <div class="gallery-item">
+    <img src="assets/images/g5.jpg" alt="Lucrare 5">
+    <div class="gallery-item-overlay"><span>+</span></div>
+
+</div>
+  <div class="gallery-item">
+    <img src="assets/images/g6.jpg" alt="Lucrare 6">
+    <div class="gallery-item-overlay"><span>+</span></div>
+  </div>
+  <div class="gallery-item">
+    <img src="assets/images/g7.jpg" alt="Lucrare 7">
+    <div class="gallery-item-overlay"><span>+</span></div>
+  </div>
+  <div class="gallery-item">
+    <img src="assets/images/g8.jpg" alt="Lucrare 8">
+    <div class="gallery-item-overlay"><span>+</span></div>
+  </div>
+</div>
+  </section>
+
+<!-- Lightbox -->
+     <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <button class="lightbox-prev" id="lightboxPrev"><</button>
+    <button class="lightbox-next" id="lightboxNext">></button>
+    <img src="" alt="" id="lightboxImg">
+  </div>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+  <div class="container">
+    <div class="contact-header">
+      <span class="section-label">Vino la noi</span>
+      <h2 class="section-title">Contact & <span>Rezervare</span></h2>
+    </div>
+    <div class="contact-grid">
+
+      <!-- Info -->
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <h4>Adresă</h4>
+            <p>Strada Exemplu nr. 10, Zalău</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <h4>Telefon</h4>
+            <p><a href="tel:+40700000000">+40 700 000 000</a></p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div>
+            <h4>Program</h4>
+            <p>Luni – Vineri: 09:00 – 20:00</p>
+            <p>Sâmbătă: 09:00 – 18:00</p>
+            <p>Duminică: Închis</p>
+          </div>
+        </div>
+        <div class="contact-socials">
+          <a href="#" class="social-btn">Instagram</a>
+          <a href="#" class="social-btn">Facebook</a>
+        </div>
+      </div>
+
+      <!-- Formular -->
+      <div class="contact-form-wrap" id="formular">
+
+  <!-- Pasul 1 — Barber -->
+  <div class="form-step" id="step1">
+    <p class="form-step-label">1. Alege barberul</p>
+    <div class="barber-select">
+      <div class="barber-option" data-barber="Andrei">
+        <div class="barber-avatar">A</div>
+        <span>Andrei</span>
+      </div>
+      <div class="barber-option" data-barber="Mihai">
+        <div class="barber-avatar">M</div>
+        <span>Mihai</span>
+      </div>
+      <div class="barber-option" data-barber="Vlad">
+        <div class="barber-avatar">V</div>
+        <span>Vlad</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pasul 2 — Serviciu -->
+  <div class="form-step" id="step2">
+    <p class="form-step-label">2. Alege serviciul</p>
+    <div class="form-group">
+      <select id="serviciu">
+        <option value="" disabled selected>Alege serviciul</option>
+        <option>Tuns Clasic — 70 RON</option>
+        <option>Pachet Complet — 120 RON</option>
+        <option>Bărbierit — 50 RON</option>
+        <option>Tuns Copii — 40 RON</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Pasul 3 — Data -->
+  <div class="form-step" id="step3">
+    <p class="form-step-label">3. Alege data</p>
+    <div class="form-group">
+      <input type="text" id="data" placeholder="Selectează data" readonly>
+    </div>
+  </div>
+
+  <!-- Pasul 4 — Ora -->
+  <div class="form-step" id="step4">
+    <p class="form-step-label">4. Alege ora</p>
+    <div class="sloturi-grid" id="sloturiGrid">
+      <p class="sloturi-hint">Selectează mai întâi barberul și data</p>
+    </div>
+  </div>
+
+  <!-- Pasul 5 — Date personale -->
+  <div class="form-step" id="step5">
+    <p class="form-step-label">5. Datele tale</p>
+    <div class="form-group">
+      <input type="text" id="nume" placeholder="Numele tău *" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <input type="tel" id="telefon" placeholder="Număr de telefon *" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <input type="email" id="email" placeholder="Email (pentru confirmare și reminder)">
+    </div>
+    <div class="form-group">
+      <textarea id="mesaj" rows="3" placeholder="Mesaj sau mențiuni speciale..."></textarea>
+    </div>
+  </div>
+
+  <button class="btn btn-gold" id="submitBtn" style="width:100%">
+    Trimite rezervarea
+  </button>
+  <p class="form-note">* Câmpuri obligatorii. Vei primi confirmare pe email.</p>
+
+</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="container">
+      <span class="nav-logo">EGO<span style="color:var(--gold)">.</span></span>
+      <p>© 2026 EGO Barbershop · Zalău · Toate drepturile rezervate</p>
+    </div>
+  </div>
+</section>typeof closeLightbox
+</body>
+</html>

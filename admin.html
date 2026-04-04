@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EGO Barbershop — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #141414;
+      --dark2: #1e1e1e;
+      --gold: #c9a84c;
+      --white: #f5f5f0;
+      --gray: #888;
+      --font-display: 'Playfair Display', serif;
+      --font-body: 'Barlow Condensed', sans-serif;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      min-height: 100vh;
+    }
+
+    /* LOGIN */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box {
+      background: var(--dark2);
+      border: 1px solid rgba(201,168,76,0.3);
+      padding: 3rem;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-box h1 {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-box h1 span { color: var(--gold); }
+
+    .login-box p {
+      color: var(--gray);
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .login-box input {
+      width: 100%;
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-left: 2px solid var(--gold);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      padding: 1rem 1.2rem;
+      outline: none;
+      margin-bottom: 1rem;
+    }
+
+    .login-box button {
+      width: 100%;
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      padding: 1rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .login-box button:hover { background: #e8c97a; }
+
+    .login-error {
+      color: #e74c3c;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    /* DASHBOARD */
+    .dashboard { display: none; }
+
+    .admin-header {
+      background: var(--dark);
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .admin-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+    }
+
+    .admin-header h2 span { color: var(--gold); }
+
+    .admin-header button {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--gray);
+      padding: 0.5rem 1rem;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .admin-header button:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .admin-body { padding: 2rem; }
+
+    /* Filtre */
+    .admin-filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-btn {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: var(--gray);
+      padding: 0.5rem 1.2rem;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .filter-date {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-left: 2px solid var(--gold);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      outline: none;
+    }
+
+    /* Stats */
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 1.5rem;
+      border-left: 2px solid var(--gold);
+    }
+
+    .stat-card h3 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card p {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--gold);
+    }
+
+    /* Tabel rezervări */
+    .rezervari-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .rezervari-table th {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+
+    .rezervari-table td {
+      padding: 1rem;
+      font-size: 0.95rem;
+      color: var(--white);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .rezervari-table tr:hover td {
+      background: rgba(201,168,76,0.05);
+      cursor: pointer;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .badge-andrei { background: rgba(201,168,76,0.2); color: var(--gold); }
+    .badge-mihai { background: rgba(76,168,201,0.2); color: #4ca8c9; }
+    .badge-vlad { background: rgba(168,201,76,0.2); color: #a8c94c; }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--gray);
+    }
+
+    .empty-state p { font-size: 1.1rem; }
+
+    @media (max-width: 768px) {
+      .admin-stats { grid-template-columns: repeat(2, 1fr); }
+      .rezervari-table th:nth-child(4),
+      .rezervari-table td:nth-child(4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <h1>EGO<span>.</span></h1>
+      <p>Panou administrare</p>
+      <input type="password" id="loginPass" placeholder="Parolă">
+      <button id="loginBtn">Intră</button>
+      <p class="login-error" id="loginError">Parolă incorectă!</p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+    <div class="admin-header">
+      <h2>EGO<span>.</span> Admin</h2>
+      <button id="logoutBtn">Ieși</button>
+    </div>
+
+    <div class="admin-body">
+
+      <!-- Filtre -->
+      <div class="admin-filters">
+        <button class="filter-btn active" data-barber="toti">Toți barberii</button>
+        <button class="filter-btn" data-barber="Andrei">Andrei</button>
+        <button class="filter-btn" data-barber="Mihai">Mihai</button>
+        <button class="filter-btn" data-barber="Vlad">Vlad</button>
+        <input type="date" class="filter-date" id="filterData">
+      </div>
+
+      <!-- Stats -->
+      <div class="admin-stats">
+        <div class="stat-card">
+          <h3>Total rezervări</h3>
+          <p id="statTotal">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Azi</h3>
+          <p id="statAzi">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Mâine</h3>
+          <p id="statMaine">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Această săptămână</h3>
+          <p id="statSaptamana">0</p>
+        </div>
+      </div>
+
+      <!-- Tabel -->
+      <div id="tabelContainer"></div>
+
+    </div>
+  </div>
+
+  <script>
+    const PAROLA = 'ego2024';
+    let toateRezervările = [];
+    let filtruBarber = 'toti';
+    let filtruData = '';
+
+    // Login
+    document.getElementById('loginBtn').addEventListener('click', login);
+    document.getElementById('loginPass').addEventListener('keydown', e => {
+      if (e.key === 'Enter') login();
+    });
+
+    function login() {
+      const pass = document.getElementById('loginPass').value;
+      if (pass === PAROLA) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        incarcaRezervari();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('loginPass').value = '';
+    });
+
+    // Filtre barberi
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filtruBarber = btn.dataset.barber;
+        afiseazaRezervari();
+      });
+    });
+
+    // Filtru data
+    document.getElementById('filterData').addEventListener('change', e => {
+      filtruData = e.target.value;
+      afiseazaRezervari();
+    });
+
+    // Încarcă rezervări
+    async function incarcaRezervari() {
+      try {
+        const response = await fetch('http://localhost:3000/admin/rezervari', {
+          headers: { 'x-admin-pass': PAROLA }
+        });
+        toateRezervările = await response.json();
+        afiseazaRezervari();
+        actualizeazaStats();
+      } catch (err) {
+        console.error('Eroare:', err);
+      }
+    }
+
+    // Afișează rezervări
+    function afiseazaRezervari() {
+      let filtrate = toateRezervările;
+
+      if (filtruBarber !== 'toti') {
+        filtrate = filtrate.filter(r => r.barber === filtruBarber);
+      }
+
+      if (filtruData) {
+        filtrate = filtrate.filter(r => r.data === filtruData);
+      }
+
+      // Sortează după dată și oră
+      filtrate.sort((a, b) => {
+        if (a.data !== b.data) return a.data.localeCompare(b.data);
+        return a.ora.localeCompare(b.ora);
+      });
+
+      const container = document.getElementById('tabelContainer');
+
+      if (filtrate.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <p>Nu există rezervări pentru filtrele selectate.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="rezervari-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Ora</th>
+              <th>Client</th>
+              <th>Telefon</th>
+              <th>Barber</th>
+              <th>Serviciu</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtrate.map(r => `
+              <tr>
+                <td>${formatData(r.data)}</td>
+                <td>${r.ora}</td>
+                <td>${r.nume}</td>
+                <td><a href="tel:${r.telefon}" style="color:var(--gold)">${r.telefon}</a></td>
+                <td><span class="badge badge-${r.barber.toLowerCase()}">${r.barber}</span></td>
+                <td>${r.serviciu}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    // Stats
+    function actualizeazaStats() {
+      const azi = new Date().toISOString().split('T')[0];
+      const maine = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+      const saptPt = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+
+      document.getElementById('statTotal').textContent = toateRezervările.length;
+      document.getElementById('statAzi').textContent = toateRezervările.filter(r => r.data === azi).length;
+      document.getElementById('statMaine').textContent = toateRezervările.filter(r => r.data === maine).length;
+      document.getElementById('statSaptamana').textContent = toateRezervările.filter(r => r.data >= azi && r.data <= saptPt).length;
+    }
+
+    function formatData(data) {
+      const d = new Date(data);
+      return d.toLocaleDateString('ro-RO', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+
+    // Refresh automat la fiecare 30 secunde
+    setInterval(incarcaRezervari, 30000);
+  </script>
+
+</body>
+</html>
