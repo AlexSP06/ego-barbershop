@@ -70,7 +70,6 @@ app.get('/sloturi', (req, res) => {
 
   let disponibile = SLOTURI.filter(slot => {
     if (rezervate.includes(slot)) return false;
-    // Dacă e azi, blochează orele trecute
     if (data === azi && slot <= oraAcum) return false;
     return true;
   });
@@ -188,11 +187,18 @@ cron.schedule('0 9 * * *', async () => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server pornit pe http://localhost:${PORT}`);
+// Admin — vezi toate rezervările
+// Admin — șterge rezervare
+app.delete('/admin/rezervari/:id', (req, res) => {
+  const pass = req.headers['x-admin-pass'];
+  if (pass !== 'ego2024') {
+    return res.status(401).json({ error: 'Acces interzis!' });
+  }
+  const { id } = req.params;
+  db.prepare('DELETE FROM rezervari WHERE id = ?').run(id);
+  res.json({ success: true });
+});
 
-  // Admin — vezi toate rezervările
 app.get('/admin/rezervari', (req, res) => {
   const pass = req.headers['x-admin-pass'];
   if (pass !== 'ego2024') {
@@ -202,12 +208,34 @@ app.get('/admin/rezervari', (req, res) => {
   res.json(toate);
 });
 
-// Test conexiune email
-transporter.verify((error, success) => {
-  if (error) {
-    console.log('Eroare email:', error);
-  } else {
-    console.log('Email configurat corect!');
-  }
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server pornit pe http://localhost:${PORT}`);
+
+  // Test conexiune email
+  transporter.verify((error, success) => {
+    if (error) {
+      console.log('Eroare email:', error);
+    } else {
+      console.log('Email configurat corect!');
+    }
+  });
 });
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    const html = `
+    <html>
+    <head><title>Test Page</title></head>
+    <body><h1>Hello from Node.js HTTP Server!</h1></body>
+    </html>
+    `;
+    res.end(html);
+});
+
+const port = 8080;
+server.listen(port, () => {
+    console.log(`Serving custom HTML at http://localhost:${port}`);
 });

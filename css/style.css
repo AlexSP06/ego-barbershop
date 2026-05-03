@@ -426,6 +426,41 @@ a:visited {
     display: flex;
   }
 }
+/* ===== ANIMATION HERO ===== */
+.hero-text{
+  animation: heroFadeIn 1.2s ease forwards;
+}
+
+.hero_badge{
+  animation: heroFadeIn 1.5s ease forwards;
+}
+
+.section-label{
+  animation: heroFadeIn 0.8s ease forwards;
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-title{
+  animation: heroFadeIn 1s ease 0.2s both;
+}
+
+.hero_desc{
+  animation: heroFadeIn 1s ease 0.4s both;
+}
+
+.hero-btns{
+  animation: heroFadeIn 1s ease 0.6s both;
+}
 
 /* ===== SERVICES ===== */
 .services{
@@ -485,9 +520,10 @@ a:visited {
     transition: width 0.4s ease;
 }
 
-.service-card:hover{
-    border-color: rgba(201, 168, 76, 0.2);
-    transform: translateY(-4px);
+.service-card:hover {
+  border-color: rgba(201, 168, 76, 0.5);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(201,168,76,0.1);
 }
 
 .service-card:hover::after{
@@ -1220,30 +1256,99 @@ a:visited {
   .sloturi-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* Footer */
+/* ===== FOOTER ===== */
 .footer {
   margin-top: 6rem;
-  padding: 2rem 0;
+  padding: 4rem 0 2rem;
   border-top: 1px solid rgba(255,255,255,0.06);
 }
 
-.footer .container {
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer-brand p {
+  color: var(--gray);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-top: 1rem;
+  max-width: 280px;
+}
+
+.footer-links,
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+  color: var(--gray);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color var(--transition);
+}
+
+.footer-links a:hover { color: var(--white); }
+
+.footer-contact p {
+  color: var(--gray);
+  font-size: 0.95rem;
+}
+
+.footer-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.04);
   flex-wrap: wrap;
   gap: 1rem;
 }
 
-.footer p {
+.footer-bottom p {
   color: var(--gray);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
+.footer-socials {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-socials a {
+  color: var(--gray);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: color var(--transition);
+}
+
+.footer-socials a:hover { color: var(--gold); }
+
 @media (max-width: 768px) {
-  .contact-grid {
+  .footer-grid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2rem;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
   }
 }
 
@@ -1262,4 +1367,63 @@ a:visited {
 .revealed {
   opacity: 1 !important;
   transform: translateY(0) !important;
+}
+
+/* ===== TRANZITII SECTIUNI ===== */
+.services,
+.team,
+.gallery,
+.contact {
+  transition: background 0.3s ease;
+}
+
+section {
+  scroll-margin-top: var(--nav-height);
+}
+
+/* ===== CUSTOM CURSOR ===== */
+.cursor{
+  width: 10px;
+  height: 10px;
+  background: var(--gold);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events:none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease;
+}
+
+.cursor-follower{
+  width: 35px;
+  height: 35px;
+  border: 1px solid rgba(201, 168, 76, 0.5);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+}
+
+.cursor.hover{
+  transform: translate(-50%, -50%) scale(2);
+}
+
+.cursor-follower.hover{
+  width: 50px;
+  height: 50px;
+  border-color: var(--gold);
+}
+
+/* ===== SCROLL PROGRESS ===== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--gold);
+  z-index: 99999;
+  width: 0%;
+  transition: width 0.1s ease;
 }

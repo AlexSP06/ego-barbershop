@@ -96,12 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Flatpickr calendar
   flatpickr('#data', {
-    locale: 'ro',
-    minDate: 'today',
-    disable: [date => date.getDay() === 0],
-    dateFormat: 'Y-m-d',
-    onChange: () => incarcaSloturi()
-  });
+  locale: 'ro',
+  minDate: 'today',  // ← blochează datele trecute
+  disable: [date => date.getDay() === 0],
+  dateFormat: 'Y-m-d',
+  onChange: () => incarcaSloturi()
+});
 
   // Selectare barber
   document.querySelectorAll('.barber-option').forEach(option => {
@@ -208,4 +208,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Cursor custom
+const cursor = document.getElementById('cursor');
+const cursorFollower = document.getElementById('cursorFollower');
+
+document.addEventListener('mousemove', (e) => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+
+  setTimeout(() => {
+    cursorFollower.style.left = e.clientX + 'px';
+    cursorFollower.style.top = e.clientY + 'px';
+  }, 80);
+});
+
+document.querySelectorAll('a, button, .service-card, .barber-option, .slot, .gallery-item').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.classList.add('hover');
+    cursorFollower.classList.add('hover');
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.classList.remove('hover');
+    cursorFollower.classList.remove('hover');
+  });
+});
+
+// Scroll progress
+const scrollProgress = document.getElementById('scrollProgress');
+window.addEventListener('scroll', () => {
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (window.scrollY / total) * 100;
+  scrollProgress.style.width = progress + '%';
+});
 }); // închide DOMContentLoaded
