@@ -1,461 +1,470 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EGO Barbershop — Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EGO Barbershop — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --black: #0a0a0a;
+  --dark: #141414;
+  --dark2: #1e1e1e;
+  --dark3: #252525;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --white: #f5f5f0;
+  --gray: #888;
+  --red: #e74c3c;
+  --green: #2ecc71;
+  --blue: #4ca8c9;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Barlow Condensed', sans-serif;
+}
+body { background: var(--black); color: var(--white); font-family: var(--font-body); min-height: 100vh; }
 
-    :root {
-      --black: #0a0a0a;
-      --dark: #141414;
-      --dark2: #1e1e1e;
-      --gold: #c9a84c;
-      --white: #f5f5f0;
-      --gray: #888;
-      --font-display: 'Playfair Display', serif;
-      --font-body: 'Barlow Condensed', sans-serif;
-    }
+/* ── LOGIN ── */
+.login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.login-box { background: var(--dark2); border: 1px solid rgba(201,168,76,0.3); padding: 3rem; width: 100%; max-width: 400px; text-align: center; }
+.login-box h1 { font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 0.5rem; }
+.login-box h1 span { color: var(--gold); }
+.login-box p { color: var(--gray); font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 2rem; }
+.login-box input { width: 100%; background: var(--dark); border: 1px solid rgba(255,255,255,0.07); border-left: 2px solid var(--gold); color: var(--white); font-family: var(--font-body); font-size: 1rem; padding: 1rem 1.2rem; outline: none; margin-bottom: 1rem; }
+.login-box button { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 1rem; font-family: var(--font-body); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+.login-box button:hover { background: var(--gold-light); }
+.login-error { color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; display: none; }
 
-    body {
-      background: var(--black);
-      color: var(--white);
-      font-family: var(--font-body);
-      min-height: 100vh;
-    }
+/* ── DASHBOARD ── */
+.dashboard { display: none; }
+.admin-header { background: var(--dark); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.admin-header h2 { font-family: var(--font-display); font-size: 1.5rem; }
+.admin-header h2 span { color: var(--gold); }
+.header-actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+.header-actions input { background: var(--dark2); border: 1px solid rgba(255,255,255,0.1); border-left: 2px solid var(--gold); color: var(--white); font-family: var(--font-body); font-size: 0.9rem; padding: 0.5rem 1rem; outline: none; width: 220px; }
+.header-actions input::placeholder { color: var(--gray); }
+.btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--gray); padding: 0.5rem 1rem; font-family: var(--font-body); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-gold { background: var(--gold); color: var(--black); border: none; padding: 0.5rem 1.2rem; font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+.btn-gold:hover { background: var(--gold-light); }
 
-    /* LOGIN */
-    .login-screen {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+.admin-body { padding: 2rem; }
 
-    .login-box {
-      background: var(--dark2);
-      border: 1px solid rgba(201,168,76,0.3);
-      padding: 3rem;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
+/* ── FILTRE ── */
+.admin-filters { display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; align-items: center; }
+.filter-btn { background: var(--dark2); border: 1px solid rgba(255,255,255,0.07); color: var(--gray); padding: 0.5rem 1.2rem; font-family: var(--font-body); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+.filter-btn.active, .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+.filter-date { background: var(--dark2); border: 1px solid rgba(255,255,255,0.07); border-left: 2px solid var(--gold); color: var(--white); font-family: var(--font-body); font-size: 0.9rem; padding: 0.5rem 1rem; outline: none; }
+.filter-status { background: var(--dark2); border: 1px solid rgba(255,255,255,0.07); color: var(--white); font-family: var(--font-body); font-size: 0.85rem; padding: 0.5rem 1rem; outline: none; cursor: pointer; }
 
-    .login-box h1 {
-      font-family: var(--font-display);
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
+/* ── STATS ── */
+.admin-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.stat-card { background: var(--dark2); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-left: 2px solid var(--gold); }
+.stat-card h3 { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.5rem; }
+.stat-card p { font-family: var(--font-display); font-size: 2rem; color: var(--gold); }
+.stat-card.stat-venit p { color: var(--green); }
 
-    .login-box h1 span { color: var(--gold); }
+/* ── TABEL ── */
+.rezervari-table { width: 100%; border-collapse: collapse; }
+.rezervari-table th { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); padding: 1rem; text-align: left; border-bottom: 1px solid rgba(201,168,76,0.2); }
+.rezervari-table td { padding: 0.85rem 1rem; font-size: 0.95rem; color: var(--white); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+.rezervari-table tr:hover td { background: rgba(201,168,76,0.04); }
+.rezervari-table tr.anulat td { opacity: 0.45; }
+.rezervari-table tr.finalizat td { opacity: 0.6; }
 
-    .login-box p {
-      color: var(--gray);
-      font-size: 0.85rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 2rem;
-    }
+/* ── BADGES ── */
+.badge { display: inline-block; padding: 0.2rem 0.6rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.badge-andrei { background: rgba(201,168,76,0.2); color: var(--gold); }
+.badge-mihai { background: rgba(76,168,201,0.2); color: #4ca8c9; }
+.badge-vlad { background: rgba(168,201,76,0.2); color: #a8c94c; }
 
-    .login-box input {
-      width: 100%;
-      background: var(--dark);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-left: 2px solid var(--gold);
-      color: var(--white);
-      font-family: var(--font-body);
-      font-size: 1rem;
-      padding: 1rem 1.2rem;
-      outline: none;
-      margin-bottom: 1rem;
-    }
+/* ── STATUS ── */
+.status-select { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: var(--white); font-family: var(--font-body); font-size: 0.8rem; padding: 0.25rem 0.5rem; cursor: pointer; outline: none; }
+.status-confirmat { border-color: rgba(46,204,113,0.4); color: var(--green); }
+.status-anulat { border-color: rgba(231,76,60,0.4); color: var(--red); }
+.status-finalizat { border-color: rgba(255,255,255,0.2); color: var(--gray); }
+.status-noshow { border-color: rgba(255,140,0,0.4); color: #ff8c00; }
 
-    .login-box button {
-      width: 100%;
-      background: var(--gold);
-      color: var(--black);
-      border: none;
-      padding: 1rem;
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
+/* ── ACTIUNI ── */
+.actiuni { display: flex; gap: 0.5rem; align-items: center; }
+.btn-delete { background: none; border: 1px solid rgba(231,76,60,0.3); color: rgba(231,76,60,0.6); padding: 0.25rem 0.6rem; font-size: 0.8rem; cursor: pointer; transition: 0.2s; font-family: var(--font-body); }
+.btn-delete:hover { border-color: var(--red); color: var(--red); background: rgba(231,76,60,0.08); }
+.btn-nota { background: none; border: 1px solid rgba(255,255,255,0.1); color: var(--gray); padding: 0.25rem 0.6rem; font-size: 0.8rem; cursor: pointer; transition: 0.2s; font-family: var(--font-body); }
+.btn-nota:hover { border-color: var(--gold); color: var(--gold); }
+.btn-nota.are-nota { border-color: rgba(201,168,76,0.4); color: var(--gold); }
 
-    .login-box button:hover { background: #e8c97a; }
+/* ── MODAL NOTA ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 999; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: var(--dark2); border: 1px solid rgba(201,168,76,0.3); padding: 2rem; width: 100%; max-width: 460px; }
+.modal-box h3 { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 1rem; }
+.modal-box h3 span { color: var(--gold); }
+.modal-box textarea { width: 100%; background: var(--dark); border: 1px solid rgba(255,255,255,0.07); border-left: 2px solid var(--gold); color: var(--white); font-family: var(--font-body); font-size: 0.95rem; padding: 1rem; outline: none; resize: vertical; min-height: 120px; margin-bottom: 1rem; }
+.modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
 
-    .login-error {
-      color: #e74c3c;
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
-      display: none;
-    }
+/* ── NOTA INLINE ── */
+.nota-text { font-size: 0.8rem; color: var(--gold); font-style: italic; margin-top: 3px; opacity: 0.8; }
 
-    /* DASHBOARD */
-    .dashboard { display: none; }
+.empty-state { text-align: center; padding: 4rem 2rem; color: var(--gray); }
+.empty-state p { font-size: 1.1rem; }
 
-    .admin-header {
-      background: var(--dark);
-      border-bottom: 1px solid rgba(201,168,76,0.2);
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .admin-header h2 {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-    }
-
-    .admin-header h2 span { color: var(--gold); }
-
-    .admin-header button {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.2);
-      color: var(--gray);
-      padding: 0.5rem 1rem;
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-
-    .admin-header button:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-    }
-
-    .admin-body { padding: 2rem; }
-
-    /* Filtre */
-    .admin-filters {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .filter-btn {
-      background: var(--dark2);
-      border: 1px solid rgba(255,255,255,0.07);
-      color: var(--gray);
-      padding: 0.5rem 1.2rem;
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-
-    .filter-btn.active,
-    .filter-btn:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-    }
-
-    .filter-date {
-      background: var(--dark2);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-left: 2px solid var(--gold);
-      color: var(--white);
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      padding: 0.5rem 1rem;
-      outline: none;
-    }
-
-    /* Stats */
-    .admin-stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .stat-card {
-      background: var(--dark2);
-      border: 1px solid rgba(255,255,255,0.05);
-      padding: 1.5rem;
-      border-left: 2px solid var(--gold);
-    }
-
-    .stat-card h3 {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-bottom: 0.5rem;
-    }
-
-    .stat-card p {
-      font-family: var(--font-display);
-      font-size: 2rem;
-      color: var(--gold);
-    }
-
-    /* Tabel rezervări */
-    .rezervari-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .rezervari-table th {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid rgba(201,168,76,0.2);
-    }
-
-    .rezervari-table td {
-      padding: 1rem;
-      font-size: 0.95rem;
-      color: var(--white);
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-
-    .rezervari-table tr:hover td {
-      background: rgba(201,168,76,0.05);
-      cursor: pointer;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .badge-andrei { background: rgba(201,168,76,0.2); color: var(--gold); }
-    .badge-mihai { background: rgba(76,168,201,0.2); color: #4ca8c9; }
-    .badge-vlad { background: rgba(168,201,76,0.2); color: #a8c94c; }
-
-    .empty-state {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: var(--gray);
-    }
-
-    .empty-state p { font-size: 1.1rem; }
-
-    @media (max-width: 768px) {
-      .admin-stats { grid-template-columns: repeat(2, 1fr); }
-      .rezervari-table th:nth-child(4),
-      .rezervari-table td:nth-child(4) { display: none; }
-    }
-  </style>
+@media (max-width: 900px) {
+  .admin-stats { grid-template-columns: repeat(2, 1fr); }
+  .rezervari-table th:nth-child(4), .rezervari-table td:nth-child(4) { display: none; }
+}
+@media (max-width: 600px) {
+  .admin-stats { grid-template-columns: repeat(2, 1fr); }
+  .admin-body { padding: 1rem; }
+  .header-actions input { width: 160px; }
+}
+</style>
 </head>
 <body>
 
-  <!-- LOGIN -->
-  <div class="login-screen" id="loginScreen">
-    <div class="login-box">
-      <h1>EGO<span>.</span></h1>
-      <p>Panou administrare</p>
-      <input type="password" id="loginPass" placeholder="Parolă">
-      <button id="loginBtn">Intră</button>
-      <p class="login-error" id="loginError">Parolă incorectă!</p>
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>EGO<span>.</span></h1>
+    <p>Panou administrare</p>
+    <input type="password" id="loginPass" placeholder="Parolă">
+    <button id="loginBtn">Intră</button>
+    <p class="login-error" id="loginError">Parolă incorectă!</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="admin-header">
+    <h2>EGO<span>.</span> Admin</h2>
+    <div class="header-actions">
+      <input type="text" id="cautare" placeholder="🔍 Caută client sau telefon...">
+      <button class="btn-gold" id="exportBtn">⬇ Export CSV</button>
+      <button class="btn-outline" id="logoutBtn">Ieși</button>
     </div>
   </div>
 
-  <!-- DASHBOARD -->
-  <div class="dashboard" id="dashboard">
-    <div class="admin-header">
-      <h2>EGO<span>.</span> Admin</h2>
-      <button id="logoutBtn">Ieși</button>
+  <div class="admin-body">
+    <!-- Filtre -->
+    <div class="admin-filters">
+      <button class="filter-btn active" data-barber="toti">Toți barberii</button>
+      <button class="filter-btn" data-barber="Andrei">Andrei</button>
+      <button class="filter-btn" data-barber="Mihai">Mihai</button>
+      <button class="filter-btn" data-barber="Vlad">Vlad</button>
+      <input type="date" class="filter-date" id="filterData">
+      <select class="filter-status" id="filterStatus">
+        <option value="toate">Toate statusurile</option>
+        <option value="confirmat">Confirmate</option>
+        <option value="anulat">Anulate</option>
+        <option value="finalizat">Finalizate</option>
+        <option value="noshow">No-show</option>
+      </select>
     </div>
 
-    <div class="admin-body">
-
-      <!-- Filtre -->
-      <div class="admin-filters">
-        <button class="filter-btn active" data-barber="toti">Toți barberii</button>
-        <button class="filter-btn" data-barber="Andrei">Andrei</button>
-        <button class="filter-btn" data-barber="Mihai">Mihai</button>
-        <button class="filter-btn" data-barber="Vlad">Vlad</button>
-        <input type="date" class="filter-date" id="filterData">
+    <!-- Stats -->
+    <div class="admin-stats">
+      <div class="stat-card">
+        <h3>Total rezervări</h3>
+        <p id="statTotal">0</p>
       </div>
-
-      <!-- Stats -->
-      <div class="admin-stats">
-        <div class="stat-card">
-          <h3>Total rezervări</h3>
-          <p id="statTotal">0</p>
-        </div>
-        <div class="stat-card">
-          <h3>Azi</h3>
-          <p id="statAzi">0</p>
-        </div>
-        <div class="stat-card">
-          <h3>Mâine</h3>
-          <p id="statMaine">0</p>
-        </div>
-        <div class="stat-card">
-          <h3>Această săptămână</h3>
-          <p id="statSaptamana">0</p>
-        </div>
+      <div class="stat-card">
+        <h3>Azi</h3>
+        <p id="statAzi">0</p>
       </div>
+      <div class="stat-card">
+        <h3>Mâine</h3>
+        <p id="statMaine">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Această săptămână</h3>
+        <p id="statSaptamana">0</p>
+      </div>
+      <div class="stat-card stat-venit">
+        <h3>Venit estimat</h3>
+        <p id="statVenit">0 RON</p>
+      </div>
+    </div>
 
-      <!-- Tabel -->
-      <div id="tabelContainer"></div>
+    <!-- Tabel -->
+    <div id="tabelContainer"></div>
+  </div>
+</div>
 
+<!-- MODAL NOTĂ -->
+<div class="modal-overlay" id="modalNota">
+  <div class="modal-box">
+    <h3>Notă pentru <span id="modalNumeClient">client</span></h3>
+    <textarea id="notaText" placeholder="Adaugă o observație internă..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-outline" id="modalCancel">Anulează</button>
+      <button class="btn-gold" id="modalSave">Salvează</button>
     </div>
   </div>
+</div>
 
-  <script>
-    const PAROLA = 'ego2024';
-    let toateRezervările = [];
-    let filtruBarber = 'toti';
-    let filtruData = '';
+<script>
+const PAROLA = prompt('Parolă admin:') || '';
+let toateRezervările = [];
+let note = JSON.parse(localStorage.getItem('ego_note') || '{}');
+let statusuri = JSON.parse(localStorage.getItem('ego_statusuri') || '{}');
+let filtruBarber = 'toti';
+let filtruData = '';
+let filtruStatus = 'toate';
+let cautareText = '';
+let modalRezId = null;
 
-    // Login
-    document.getElementById('loginBtn').addEventListener('click', login);
-    document.getElementById('loginPass').addEventListener('keydown', e => {
-      if (e.key === 'Enter') login();
+// ── LOGIN ──
+document.getElementById('loginBtn').addEventListener('click', login);
+document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+
+function login() {
+  const pass = document.getElementById('loginPass').value;
+  if (pass === PAROLA) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    incarcaRezervari();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('loginPass').value = '';
+});
+
+// ── FILTRE ──
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filtruBarber = btn.dataset.barber;
+    afiseazaRezervari();
+  });
+});
+
+document.getElementById('filterData').addEventListener('change', e => {
+  filtruData = e.target.value;
+  afiseazaRezervari();
+});
+
+document.getElementById('filterStatus').addEventListener('change', e => {
+  filtruStatus = e.target.value;
+  afiseazaRezervari();
+});
+
+document.getElementById('cautare').addEventListener('input', e => {
+  cautareText = e.target.value.toLowerCase().trim();
+  afiseazaRezervari();
+});
+
+// ── ÎNCARCĂ ──
+async function incarcaRezervari() {
+  try {
+    const response = await fetch('/admin/rezervari', {
+      headers: { 'x-admin-pass': PAROLA }
     });
+    toateRezervările = await response.json();
+    afiseazaRezervari();
+    actualizeazaStats();
+  } catch (err) {
+    console.error('Eroare:', err);
+  }
+}
 
-    function login() {
-      const pass = document.getElementById('loginPass').value;
-      if (pass === PAROLA) {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        incarcaRezervari();
-      } else {
-        document.getElementById('loginError').style.display = 'block';
-      }
-    }
+// ── AFIȘEAZĂ ──
+function afiseazaRezervari() {
+  let filtrate = toateRezervările;
 
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('dashboard').style.display = 'none';
-      document.getElementById('loginPass').value = '';
-    });
+  if (filtruBarber !== 'toti') filtrate = filtrate.filter(r => r.barber === filtruBarber);
+  if (filtruData) filtrate = filtrate.filter(r => r.data === filtruData);
+  if (filtruStatus !== 'toate') filtrate = filtrate.filter(r => (statusuri[r.id] || 'confirmat') === filtruStatus);
+  if (cautareText) filtrate = filtrate.filter(r =>
+    r.nume.toLowerCase().includes(cautareText) ||
+    r.telefon.includes(cautareText)
+  );
 
-    // Filtre barberi
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        filtruBarber = btn.dataset.barber;
-        afiseazaRezervari();
-      });
-    });
+  filtrate.sort((a, b) => {
+    if (a.data !== b.data) return a.data.localeCompare(b.data);
+    return a.ora.localeCompare(b.ora);
+  });
 
-    // Filtru data
-    document.getElementById('filterData').addEventListener('change', e => {
-      filtruData = e.target.value;
-      afiseazaRezervari();
-    });
+  const container = document.getElementById('tabelContainer');
 
-    // Încarcă rezervări
-    async function incarcaRezervari() {
-      try {
-        const response = await fetch('http://localhost:3000/admin/rezervari', {
-          headers: { 'x-admin-pass': PAROLA }
-        });
-        toateRezervările = await response.json();
-        afiseazaRezervari();
-        actualizeazaStats();
-      } catch (err) {
-        console.error('Eroare:', err);
-      }
-    }
+  if (filtrate.length === 0) {
+    container.innerHTML = `<div class="empty-state"><p>Nu există rezervări pentru filtrele selectate.</p></div>`;
+    return;
+  }
 
-    // Afișează rezervări
-    function afiseazaRezervari() {
-      let filtrate = toateRezervările;
-
-      if (filtruBarber !== 'toti') {
-        filtrate = filtrate.filter(r => r.barber === filtruBarber);
-      }
-
-      if (filtruData) {
-        filtrate = filtrate.filter(r => r.data === filtruData);
-      }
-
-      // Sortează după dată și oră
-      filtrate.sort((a, b) => {
-        if (a.data !== b.data) return a.data.localeCompare(b.data);
-        return a.ora.localeCompare(b.ora);
-      });
-
-      const container = document.getElementById('tabelContainer');
-
-      if (filtrate.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <p>Nu există rezervări pentru filtrele selectate.</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = `
-        <table class="rezervari-table">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Ora</th>
-              <th>Client</th>
-              <th>Telefon</th>
-              <th>Barber</th>
-              <th>Serviciu</th>
+  container.innerHTML = `
+    <table class="rezervari-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Ora</th>
+          <th>Client</th>
+          <th>Telefon</th>
+          <th>Barber</th>
+          <th>Serviciu</th>
+          <th>Status</th>
+          <th>Acțiuni</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${filtrate.map(r => {
+          const status = statusuri[r.id] || 'confirmat';
+          const nota = note[r.id] || '';
+          return `
+            <tr class="${status !== 'confirmat' ? status : ''}" data-id="${r.id}">
+              <td>${formatData(r.data)}</td>
+              <td><strong>${r.ora}</strong></td>
+              <td>
+                <div>${r.nume}</div>
+                ${nota ? `<div class="nota-text">📝 ${nota}</div>` : ''}
+              </td>
+              <td><a href="tel:${r.telefon}" style="color:var(--gold)">${r.telefon}</a></td>
+              <td><span class="badge badge-${r.barber.toLowerCase()}">${r.barber}</span></td>
+              <td style="font-size:0.9rem">${r.serviciu}</td>
+              <td>
+                <select class="status-select status-${status}" onchange="schimbaStatus(${r.id}, this)">
+                  <option value="confirmat" ${status==='confirmat'?'selected':''}>✅ Confirmat</option>
+                  <option value="finalizat" ${status==='finalizat'?'selected':''}>✔ Finalizat</option>
+                  <option value="anulat" ${status==='anulat'?'selected':''}>✗ Anulat</option>
+                  <option value="noshow" ${status==='noshow'?'selected':''}>⚠ No-show</option>
+                </select>
+              </td>
+              <td>
+                <div class="actiuni">
+                  <button class="btn-nota ${nota ? 'are-nota' : ''}" onclick="deschideNota(${r.id}, '${r.nume.replace(/'/g,"\\'")}', this)">📝</button>
+                  <button class="btn-delete" onclick="stergeRezervare(${r.id}, this)">✕</button>
+                </div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            ${filtrate.map(r => `
-              <tr>
-                <td>${formatData(r.data)}</td>
-                <td>${r.ora}</td>
-                <td>${r.nume}</td>
-                <td><a href="tel:${r.telefon}" style="color:var(--gold)">${r.telefon}</a></td>
-                <td><span class="badge badge-${r.barber.toLowerCase()}">${r.barber}</span></td>
-                <td>${r.serviciu}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `;
-    }
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+}
 
-    // Stats
-    function actualizeazaStats() {
-      const azi = new Date().toISOString().split('T')[0];
-      const maine = new Date(Date.now() + 86400000).toISOString().split('T')[0];
-      const saptPt = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+// ── STATS ──
+function actualizeazaStats() {
+  const azi = new Date().toISOString().split('T')[0];
+  const maine = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+  const saptPt = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
 
-      document.getElementById('statTotal').textContent = toateRezervările.length;
-      document.getElementById('statAzi').textContent = toateRezervările.filter(r => r.data === azi).length;
-      document.getElementById('statMaine').textContent = toateRezervările.filter(r => r.data === maine).length;
-      document.getElementById('statSaptamana').textContent = toateRezervările.filter(r => r.data >= azi && r.data <= saptPt).length;
-    }
+  document.getElementById('statTotal').textContent = toateRezervările.length;
+  document.getElementById('statAzi').textContent = toateRezervările.filter(r => r.data === azi).length;
+  document.getElementById('statMaine').textContent = toateRezervările.filter(r => r.data === maine).length;
+  document.getElementById('statSaptamana').textContent = toateRezervările.filter(r => r.data >= azi && r.data <= saptPt).length;
 
-    function formatData(data) {
-      const d = new Date(data);
-      return d.toLocaleDateString('ro-RO', { weekday: 'short', day: 'numeric', month: 'short' });
-    }
+  // Venit estimat din serviciile active (neanulate)
+  const pretMap = { '70': 70, '120': 120, '50': 50, '40': 40 };
+  let venit = 0;
+  toateRezervările.forEach(r => {
+    const st = statusuri[r.id] || 'confirmat';
+    if (st === 'anulat') return;
+    const match = r.serviciu.match(/(\d+)\s*RON/);
+    if (match) venit += parseInt(match[1]);
+  });
+  document.getElementById('statVenit').textContent = venit.toLocaleString('ro-RO') + ' RON';
+}
 
-    // Refresh automat la fiecare 30 secunde
-    setInterval(incarcaRezervari, 30000);
-  </script>
+// ── STATUS ──
+function schimbaStatus(id, select) {
+  const val = select.value;
+  statusuri[id] = val;
+  localStorage.setItem('ego_statusuri', JSON.stringify(statusuri));
+  select.className = `status-select status-${val}`;
+  const row = select.closest('tr');
+  row.className = val !== 'confirmat' ? val : '';
+  actualizeazaStats();
+}
 
+// ── NOTĂ ──
+function deschideNota(id, nume, btn) {
+  modalRezId = id;
+  document.getElementById('modalNumeClient').textContent = nume;
+  document.getElementById('notaText').value = note[id] || '';
+  document.getElementById('modalNota').classList.add('open');
+}
+
+document.getElementById('modalCancel').addEventListener('click', () => {
+  document.getElementById('modalNota').classList.remove('open');
+  modalRezId = null;
+});
+
+document.getElementById('modalSave').addEventListener('click', () => {
+  const text = document.getElementById('notaText').value.trim();
+  if (text) {
+    note[modalRezId] = text;
+  } else {
+    delete note[modalRezId];
+  }
+  localStorage.setItem('ego_note', JSON.stringify(note));
+  document.getElementById('modalNota').classList.remove('open');
+  modalRezId = null;
+  afiseazaRezervari();
+});
+
+document.getElementById('modalNota').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalNota')) {
+    document.getElementById('modalNota').classList.remove('open');
+    modalRezId = null;
+  }
+});
+
+// ── ȘTERGERE ──
+async function stergeRezervare(id, btn) {
+  if (!confirm('Ștergi această rezervare?')) return;
+  try {
+    await fetch(`/admin/rezervari/${id}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-pass': PAROLA }
+    });
+    toateRezervările = toateRezervările.filter(r => r.id !== id);
+    delete note[id];
+    delete statusuri[id];
+    localStorage.setItem('ego_note', JSON.stringify(note));
+    localStorage.setItem('ego_statusuri', JSON.stringify(statusuri));
+    afiseazaRezervari();
+    actualizeazaStats();
+  } catch (err) {
+    alert('Eroare la ștergere.');
+  }
+}
+
+// ── EXPORT CSV ──
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const rows = [['Data', 'Ora', 'Client', 'Telefon', 'Email', 'Barber', 'Serviciu', 'Status', 'Nota']];
+  toateRezervările.forEach(r => {
+    rows.push([
+      r.data, r.ora, r.nume, r.telefon,
+      r.email || '',
+      r.barber, r.serviciu,
+      statusuri[r.id] || 'confirmat',
+      (note[r.id] || '').replace(/,/g, ';')
+    ]);
+  });
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ego-rezervari-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// ── FORMAT DATA ──
+function formatData(data) {
+  const d = new Date(data);
+  return d.toLocaleDateString('ro-RO', { weekday: 'short', day: 'numeric', month: 'short' });
+}
+
+// Refresh automat
+setInterval(incarcaRezervari, 30000);
+</script>
 </body>
 </html>

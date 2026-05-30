@@ -95,12 +95,25 @@ document.addEventListener('DOMContentLoaded', () => {
   let oraSelectata = null;
 
   // Flatpickr calendar
-  flatpickr('#data', {
-  locale: 'ro',
-  minDate: 'today',  // ← blochează datele trecute
-  disable: [date => date.getDay() === 0],
-  dateFormat: 'Y-m-d',
-  onChange: () => incarcaSloturi()
+  flatpickr("#data", {
+  locale: "ro",
+  minDate: "today",
+  maxDate: new Date().fp_incr(60),
+  disableMobile: true,
+  dateFormat: "Y-m-d",
+  altInput: true,
+  altFormat: "j F Y",
+  disable: [
+    function(date) {
+      return date.getDay() === 0; // blochează duminica
+    }
+  ],
+  onChange: function(selectedDates, dateStr) {
+    const barber = document.querySelector('.barber-option.selected')?.dataset.barber;
+    if (barber && dateStr) {
+      incarcaSloturi(barber, dateStr);
+    }
+  }
 });
 
   // Selectare barber
@@ -241,3 +254,10 @@ window.addEventListener('scroll', () => {
   scrollProgress.style.width = progress + '%';
 });
 }); // închide DOMContentLoaded
+
+// Acces rapid admin cu Ctrl+Shift+A
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+    window.location.href = '/admin.html'
+  }
+});

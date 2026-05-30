@@ -372,16 +372,16 @@ a:visited {
 }
 
 /* Scroll indicator */
-.hero-scroll{
-    position: absolute;
-    bottom: 2.5 rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    z-index: 2;
+.hero-scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
 }
 
 .hero-scroll span{
@@ -626,10 +626,39 @@ a:visited {
     cursor: pointer;
 }
 
-.team-img-wrap{
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 3/4;
+.team-avatar-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--gold);
+  background: #0d0d0d;
+  letter-spacing: 2px;
+}
+
+.team-img-wrap {
+  position: relative;
+  width: 100%;
+  padding-bottom: 120%;
+  overflow: hidden;
+  background: #111;
+}
+
+.team-img-wrap img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-img-wrap img[src="assets/images/team-placeholder.jpg"],
+.team-img-wrap img:not([src]) {
+  display: none;
 }
 
 .team-img-wrap img{
@@ -994,18 +1023,18 @@ a:visited {
 }
 
 .barber-avatar {
-  width: 55px;
-  height: 55px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: var(--gold);
-  color: var(--black);
+  color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
   font-size: 1.4rem;
   font-weight: 700;
-  transition: var(--transition);
+  font-family: var(--font-display);
+  margin: 0 auto 10px;
 }
 
 .barber-option.selected .barber-avatar {
