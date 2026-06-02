@@ -205,8 +205,10 @@ body { background: var(--black); color: var(--white); font-family: var(--font-bo
 <script>
 let TOKEN = '';
 let toateRezervările = [];
-let note = JSON.parse(localStorage.getItem('ego_note') || '{}');
-let statusuri = JSON.parse(localStorage.getItem('ego_statusuri') || '{}');
+db.exec(`
+ALTER TABLE rezervari ADD COLUMN status TEXT DEFAULT 'confirmat';
+ALTER TABLE rezervari ADD COLUMN nota TEXT DEFAULT '';
+`);
 let filtruBarber = 'toti';
 let filtruData = '';
 let filtruStatus = 'toate';
@@ -228,7 +230,6 @@ async function login() {
     const data = await res.json();
     if (data.success) {
       TOKEN = data.token;
-      localStorage.setItem('ego_token', TOKEN);
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
       incarcaRezervari();
@@ -276,7 +277,7 @@ document.getElementById('cautare').addEventListener('input', e => { cautareText 
 async function incarcaRezervari() {
   try {
     const response = await fetch('/admin/rezervari', {
-      headers: { 'x-admin-pass': TOKEN }
+      headers: {'Authorization': 'Bearer ' + TOKEN}
     });
     if (response.status === 401) {
       localStorage.removeItem('ego_token');
@@ -319,8 +320,8 @@ function afiseazaRezervari() {
       </thead>
       <tbody>
         ${filtrate.map(r => {
-          const status = statusuri[r.id] || 'confirmat';
-          const nota = note[r.id] || '';
+          const status = r.status || 'confirmat';
+          const nota = r.nota || '';
           return `
             <tr class="${status !== 'confirmat' ? status : ''}" data-id="${r.id}">
               <td>${formatData(r.data)}</td>
@@ -373,12 +374,19 @@ function actualizeazaStats() {
 }
 
 // ── STATUS ──
-function schimbaStatus(id, select) {
-  statusuri[id] = select.value;
-  localStorage.setItem('ego_statusuri', JSON.stringify(statusuri));
-  select.className = `status-select status-${select.value}`;
-  select.closest('tr').className = select.value !== 'confirmat' ? select.value : '';
-  actualizeazaStats();
+async function schimbaStatus(id, select) {
+  const status = select.value;
+
+  await fetch(`/admin/rezervari/${id}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + TOKEN
+    },
+    body: JSON.stringify({ status })
+  });
+
+  afiseazaRezervari();
 }
 
 // ── NOTĂ ──
@@ -392,14 +400,25 @@ document.getElementById('modalCancel').addEventListener('click', () => {
   document.getElementById('modalNota').classList.remove('open');
   modalRezId = null;
 });
-document.getElementById('modalSave').addEventListener('click', () => {
+
+document.getElementById('modalSave').addEventListener('click', async () => {
   const text = document.getElementById('notaText').value.trim();
-  if (text) { note[modalRezId] = text; } else { delete note[modalRezId]; }
-  localStorage.setItem('ego_note', JSON.stringify(note));
+
+  await fetch(`/admin/rezervari/${modalRezId}/nota`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + TOKEN
+    },
+    body: JSON.stringify({ nota: text })
+  });
+
   document.getElementById('modalNota').classList.remove('open');
   modalRezId = null;
+
   afiseazaRezervari();
 });
+
 document.getElementById('modalNota').addEventListener('click', e => {
   if (e.target === document.getElementById('modalNota')) {
     document.getElementById('modalNota').classList.remove('open');
@@ -413,7 +432,7 @@ async function stergeRezervare(id) {
   try {
     await fetch(`/admin/rezervari/${id}`, {
       method: 'DELETE',
-      headers: { 'x-admin-pass': TOKEN }
+      headers: {'Authorization': 'Bearer ' + TOKEN}
     });
     toateRezervările = toateRezervările.filter(r => r.id !== id);
     delete note[id]; delete statusuri[id];

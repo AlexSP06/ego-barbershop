@@ -5,11 +5,27 @@ const cron = require('node-cron');
 const cors = require('cors');
 const Database = require('better-sqlite3');
 const path = require('path');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../')));
+
+function authAdmin(req, res, next) {
+  const header = req.headers.authorization;
+
+  if (!header) return res.status(401).json({ error: 'Neautorizat' });
+
+  const token = header.split(' ')[1];
+
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+    next();
+  } catch {
+    return res.status(401).json({ error: 'Token invalid' });
+  }
+}
 
 // Baza de date
 const db = new Database('rezervari.db');
@@ -189,7 +205,7 @@ cron.schedule('0 9 * * *', async () => {
 
 // Admin — vezi toate rezervările
 // Admin — șterge rezervare
-app.delete('/admin/rezervari/:id', (req, res) => {
+app.delete('/admin/rezervari/:id', authAdmin, (req, res) => {
   const pass = req.headers['x-admin-pass'];
   if (pass !== process.env.ADMIN_PASS){
     return res.status(401).json({ error: 'Acces interzis!' });
@@ -199,7 +215,7 @@ app.delete('/admin/rezervari/:id', (req, res) => {
   res.json({ success: true });
 });
 
-app.get('/admin/rezervari', (req, res) => {
+app.get('/admin/rezervari', authAdmin, (req, res) => {
   const pass = req.headers['x-admin-pass'];
   if (pass !== process.env.ADMIN_PASS){
     return res.status(401).json({ error: 'Acces interzis!' });
@@ -211,11 +227,18 @@ app.get('/admin/rezervari', (req, res) => {
 // Login endpoint
 app.post('/admin/login', (req, res) => {
   const { pass } = req.body;
-  if (pass === process.env.ADMIN_PASS) {
-    res.json({ success: true, token: process.env.ADMIN_PASS });
-  } else {
-    res.status(401).json({ error: 'Parolă incorectă' });
+
+  if (pass !== process.env.ADMIN_PASS) {
+    return res.status(401).json({ error: 'Parolă incorectă' });
   }
+
+  const token = jwt.sign(
+    { role: 'admin' },
+    process.env.JWT_SECRET,
+    { expiresIn: '24h' }
+  );
+
+  res.json({ success: true, token });
 });
 
 const PORT = process.env.PORT || 3000;
@@ -232,3 +255,22 @@ app.listen(PORT, () => {
   });
 });
 
+app.put('/admin/rezervari/:id/status', authAdmin, (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  db.prepare('UPDATE rezervari SET status = ? WHERE id = ?')
+    .run(status, id);
+
+  res.json({ success: true });
+});
+
+app.put('/admin/rezervari/:id/nota', authAdmin, (req, res) => {
+  const { id } = req.params;
+  const { nota } = req.body;
+
+  db.prepare('UPDATE rezervari SET nota = ? WHERE id = ?')
+    .run(nota, id);
+
+  res.json({ success: true });
+});
