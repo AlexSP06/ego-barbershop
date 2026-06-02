@@ -191,7 +191,7 @@ cron.schedule('0 9 * * *', async () => {
 // Admin — șterge rezervare
 app.delete('/admin/rezervari/:id', (req, res) => {
   const pass = req.headers['x-admin-pass'];
-  if (pass !== 'ego2024') {
+  if (pass !== process.env.ADMIN_PASS){
     return res.status(401).json({ error: 'Acces interzis!' });
   }
   const { id } = req.params;
@@ -201,7 +201,7 @@ app.delete('/admin/rezervari/:id', (req, res) => {
 
 app.get('/admin/rezervari', (req, res) => {
   const pass = req.headers['x-admin-pass'];
-  if (pass !== 'ego2024') {
+  if (pass !== process.env.ADMIN_PASS){
     return res.status(401).json({ error: 'Acces interzis!' });
   }
   const toate = db.prepare('SELECT * FROM rezervari ORDER BY data ASC, ora ASC').all();
@@ -232,20 +232,3 @@ app.listen(PORT, () => {
   });
 });
 
-const http = require('http');
-
-const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    const html = `
-    <html>
-    <head><title>Test Page</title></head>
-    <body><h1>Hello from Node.js HTTP Server!</h1></body>
-    </html>
-    `;
-    res.end(html);
-});
-
-const port = 8080;
-server.listen(port, () => {
-    console.log(`Serving custom HTML at http://localhost:${port}`);
-});
