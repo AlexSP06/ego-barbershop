@@ -208,6 +208,16 @@ app.get('/admin/rezervari', (req, res) => {
   res.json(toate);
 });
 
+// Login endpoint
+app.post('/admin/login', (req, res) => {
+  const { pass } = req.body;
+  if (pass === process.env.ADMIN_PASS) {
+    res.json({ success: true, token: process.env.ADMIN_PASS });
+  } else {
+    res.status(401).json({ error: 'Parolă incorectă' });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server pornit pe http://localhost:${PORT}`);

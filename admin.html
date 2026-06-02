@@ -203,7 +203,7 @@ body { background: var(--black); color: var(--white); font-family: var(--font-bo
 </div>
 
 <script>
-const PAROLA = prompt('Parolă admin:') || '';
+let TOKEN = '';
 let toateRezervările = [];
 let note = JSON.parse(localStorage.getItem('ego_note') || '{}');
 let statusuri = JSON.parse(localStorage.getItem('ego_statusuri') || '{}');
@@ -217,18 +217,43 @@ let modalRezId = null;
 document.getElementById('loginBtn').addEventListener('click', login);
 document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
 
-function login() {
+async function login() {
   const pass = document.getElementById('loginPass').value;
-  if (pass === PAROLA) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    incarcaRezervari();
-  } else {
+  try {
+    const res = await fetch('/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pass })
+    });
+    const data = await res.json();
+    if (data.success) {
+      TOKEN = data.token;
+      sessionStorage.setItem('ego_token', TOKEN);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      incarcaRezervari();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  } catch (err) {
     document.getElementById('loginError').style.display = 'block';
   }
 }
 
+// Auto-login dacă există token în sesiune
+window.addEventListener('load', () => {
+  const saved = sessionStorage.getItem('ego_token');
+  if (saved) {
+    TOKEN = saved;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    incarcaRezervari();
+  }
+});
+
 document.getElementById('logoutBtn').addEventListener('click', () => {
+  TOKEN = '';
+  sessionStorage.removeItem('ego_token');
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('loginPass').value = '';
@@ -243,28 +268,21 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     afiseazaRezervari();
   });
 });
-
-document.getElementById('filterData').addEventListener('change', e => {
-  filtruData = e.target.value;
-  afiseazaRezervari();
-});
-
-document.getElementById('filterStatus').addEventListener('change', e => {
-  filtruStatus = e.target.value;
-  afiseazaRezervari();
-});
-
-document.getElementById('cautare').addEventListener('input', e => {
-  cautareText = e.target.value.toLowerCase().trim();
-  afiseazaRezervari();
-});
+document.getElementById('filterData').addEventListener('change', e => { filtruData = e.target.value; afiseazaRezervari(); });
+document.getElementById('filterStatus').addEventListener('change', e => { filtruStatus = e.target.value; afiseazaRezervari(); });
+document.getElementById('cautare').addEventListener('input', e => { cautareText = e.target.value.toLowerCase().trim(); afiseazaRezervari(); });
 
 // ── ÎNCARCĂ ──
 async function incarcaRezervari() {
   try {
     const response = await fetch('/admin/rezervari', {
-      headers: { 'x-admin-pass': PAROLA }
+      headers: { 'x-admin-pass': TOKEN }
     });
+    if (response.status === 401) {
+      sessionStorage.removeItem('ego_token');
+      location.reload();
+      return;
+    }
     toateRezervările = await response.json();
     afiseazaRezervari();
     actualizeazaStats();
@@ -276,39 +294,27 @@ async function incarcaRezervari() {
 // ── AFIȘEAZĂ ──
 function afiseazaRezervari() {
   let filtrate = toateRezervările;
-
   if (filtruBarber !== 'toti') filtrate = filtrate.filter(r => r.barber === filtruBarber);
   if (filtruData) filtrate = filtrate.filter(r => r.data === filtruData);
   if (filtruStatus !== 'toate') filtrate = filtrate.filter(r => (statusuri[r.id] || 'confirmat') === filtruStatus);
   if (cautareText) filtrate = filtrate.filter(r =>
-    r.nume.toLowerCase().includes(cautareText) ||
-    r.telefon.includes(cautareText)
+    r.nume.toLowerCase().includes(cautareText) || r.telefon.includes(cautareText)
   );
-
   filtrate.sort((a, b) => {
     if (a.data !== b.data) return a.data.localeCompare(b.data);
     return a.ora.localeCompare(b.ora);
   });
-
   const container = document.getElementById('tabelContainer');
-
   if (filtrate.length === 0) {
     container.innerHTML = `<div class="empty-state"><p>Nu există rezervări pentru filtrele selectate.</p></div>`;
     return;
   }
-
   container.innerHTML = `
     <table class="rezervari-table">
       <thead>
         <tr>
-          <th>Data</th>
-          <th>Ora</th>
-          <th>Client</th>
-          <th>Telefon</th>
-          <th>Barber</th>
-          <th>Serviciu</th>
-          <th>Status</th>
-          <th>Acțiuni</th>
+          <th>Data</th><th>Ora</th><th>Client</th><th>Telefon</th>
+          <th>Barber</th><th>Serviciu</th><th>Status</th><th>Acțiuni</th>
         </tr>
       </thead>
       <tbody>
@@ -336,8 +342,8 @@ function afiseazaRezervari() {
               </td>
               <td>
                 <div class="actiuni">
-                  <button class="btn-nota ${nota ? 'are-nota' : ''}" onclick="deschideNota(${r.id}, '${r.nume.replace(/'/g,"\\'")}', this)">📝</button>
-                  <button class="btn-delete" onclick="stergeRezervare(${r.id}, this)">✕</button>
+                  <button class="btn-nota ${nota ? 'are-nota' : ''}" onclick="deschideNota(${r.id}, '${r.nume.replace(/'/g,"\\'")}')">📝</button>
+                  <button class="btn-delete" onclick="stergeRezervare(${r.id})">✕</button>
                 </div>
               </td>
             </tr>
@@ -353,18 +359,13 @@ function actualizeazaStats() {
   const azi = new Date().toISOString().split('T')[0];
   const maine = new Date(Date.now() + 86400000).toISOString().split('T')[0];
   const saptPt = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
-
   document.getElementById('statTotal').textContent = toateRezervările.length;
   document.getElementById('statAzi').textContent = toateRezervările.filter(r => r.data === azi).length;
   document.getElementById('statMaine').textContent = toateRezervările.filter(r => r.data === maine).length;
   document.getElementById('statSaptamana').textContent = toateRezervările.filter(r => r.data >= azi && r.data <= saptPt).length;
-
-  // Venit estimat din serviciile active (neanulate)
-  const pretMap = { '70': 70, '120': 120, '50': 50, '40': 40 };
   let venit = 0;
   toateRezervările.forEach(r => {
-    const st = statusuri[r.id] || 'confirmat';
-    if (st === 'anulat') return;
+    if ((statusuri[r.id] || 'confirmat') === 'anulat') return;
     const match = r.serviciu.match(/(\d+)\s*RON/);
     if (match) venit += parseInt(match[1]);
   });
@@ -373,41 +374,32 @@ function actualizeazaStats() {
 
 // ── STATUS ──
 function schimbaStatus(id, select) {
-  const val = select.value;
-  statusuri[id] = val;
+  statusuri[id] = select.value;
   localStorage.setItem('ego_statusuri', JSON.stringify(statusuri));
-  select.className = `status-select status-${val}`;
-  const row = select.closest('tr');
-  row.className = val !== 'confirmat' ? val : '';
+  select.className = `status-select status-${select.value}`;
+  select.closest('tr').className = select.value !== 'confirmat' ? select.value : '';
   actualizeazaStats();
 }
 
 // ── NOTĂ ──
-function deschideNota(id, nume, btn) {
+function deschideNota(id, nume) {
   modalRezId = id;
   document.getElementById('modalNumeClient').textContent = nume;
   document.getElementById('notaText').value = note[id] || '';
   document.getElementById('modalNota').classList.add('open');
 }
-
 document.getElementById('modalCancel').addEventListener('click', () => {
   document.getElementById('modalNota').classList.remove('open');
   modalRezId = null;
 });
-
 document.getElementById('modalSave').addEventListener('click', () => {
   const text = document.getElementById('notaText').value.trim();
-  if (text) {
-    note[modalRezId] = text;
-  } else {
-    delete note[modalRezId];
-  }
+  if (text) { note[modalRezId] = text; } else { delete note[modalRezId]; }
   localStorage.setItem('ego_note', JSON.stringify(note));
   document.getElementById('modalNota').classList.remove('open');
   modalRezId = null;
   afiseazaRezervari();
 });
-
 document.getElementById('modalNota').addEventListener('click', e => {
   if (e.target === document.getElementById('modalNota')) {
     document.getElementById('modalNota').classList.remove('open');
@@ -416,54 +408,41 @@ document.getElementById('modalNota').addEventListener('click', e => {
 });
 
 // ── ȘTERGERE ──
-async function stergeRezervare(id, btn) {
+async function stergeRezervare(id) {
   if (!confirm('Ștergi această rezervare?')) return;
   try {
     await fetch(`/admin/rezervari/${id}`, {
       method: 'DELETE',
-      headers: { 'x-admin-pass': PAROLA }
+      headers: { 'x-admin-pass': TOKEN }
     });
     toateRezervările = toateRezervările.filter(r => r.id !== id);
-    delete note[id];
-    delete statusuri[id];
+    delete note[id]; delete statusuri[id];
     localStorage.setItem('ego_note', JSON.stringify(note));
     localStorage.setItem('ego_statusuri', JSON.stringify(statusuri));
     afiseazaRezervari();
     actualizeazaStats();
-  } catch (err) {
-    alert('Eroare la ștergere.');
-  }
+  } catch (err) { alert('Eroare la ștergere.'); }
 }
 
 // ── EXPORT CSV ──
 document.getElementById('exportBtn').addEventListener('click', () => {
-  const rows = [['Data', 'Ora', 'Client', 'Telefon', 'Email', 'Barber', 'Serviciu', 'Status', 'Nota']];
+  const rows = [['Data','Ora','Client','Telefon','Email','Barber','Serviciu','Status','Nota']];
   toateRezervările.forEach(r => {
-    rows.push([
-      r.data, r.ora, r.nume, r.telefon,
-      r.email || '',
-      r.barber, r.serviciu,
-      statusuri[r.id] || 'confirmat',
-      (note[r.id] || '').replace(/,/g, ';')
-    ]);
+    rows.push([r.data, r.ora, r.nume, r.telefon, r.email||'', r.barber, r.serviciu,
+      statusuri[r.id]||'confirmat', (note[r.id]||'').replace(/,/g,';')]);
   });
   const csv = rows.map(r => r.join(',')).join('\n');
-  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `ego-rezervari-${new Date().toISOString().split('T')[0]}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
+  a.href = url; a.download = `ego-rezervari-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click(); URL.revokeObjectURL(url);
 });
 
-// ── FORMAT DATA ──
 function formatData(data) {
-  const d = new Date(data);
-  return d.toLocaleDateString('ro-RO', { weekday: 'short', day: 'numeric', month: 'short' });
+  return new Date(data).toLocaleDateString('ro-RO', {weekday:'short', day:'numeric', month:'short'});
 }
 
-// Refresh automat
 setInterval(incarcaRezervari, 30000);
 </script>
 </body>
