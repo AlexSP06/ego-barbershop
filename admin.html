@@ -228,7 +228,7 @@ async function login() {
     const data = await res.json();
     if (data.success) {
       TOKEN = data.token;
-      sessionStorage.setItem('ego_token', TOKEN);
+      localStorage.setItem('ego_token', TOKEN);
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
       incarcaRezervari();
@@ -242,7 +242,7 @@ async function login() {
 
 // Auto-login dacă există token în sesiune
 window.addEventListener('load', () => {
-  const saved = sessionStorage.getItem('ego_token');
+  const saved = localStorage.getItem('ego_token');
   if (saved) {
     TOKEN = saved;
     document.getElementById('loginScreen').style.display = 'none';
@@ -253,7 +253,7 @@ window.addEventListener('load', () => {
 
 document.getElementById('logoutBtn').addEventListener('click', () => {
   TOKEN = '';
-  sessionStorage.removeItem('ego_token');
+  localStorage.removeItem('ego_token');
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('loginPass').value = '';
@@ -279,7 +279,7 @@ async function incarcaRezervari() {
       headers: { 'x-admin-pass': TOKEN }
     });
     if (response.status === 401) {
-      sessionStorage.removeItem('ego_token');
+      localStorage.removeItem('ego_token');
       location.reload();
       return;
     }
