@@ -203,7 +203,7 @@ body { background: var(--black); color: var(--white); font-family: var(--font-bo
 </div>
 
 <script>
-let TOKEN = '';
+let TOKEN = localStorage.getItem('ego_token') || '';
 let toateRezervările = [];
 let filtruBarber = 'toti';
 let filtruData = '';
@@ -274,7 +274,7 @@ document.getElementById('cautare').addEventListener('input', e => { cautareText 
 async function incarcaRezervari() {
   try {
     const response = await fetch('/admin/rezervari', {
-      headers: {'Authorization': 'Bearer ' + TOKEN}
+      headers: { 'x-admin-pass': TOKEN }
     });
     if (response.status === 401) {
       localStorage.removeItem('ego_token');
