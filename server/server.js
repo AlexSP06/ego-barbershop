@@ -42,6 +42,8 @@ db.exec(`
     data TEXT NOT NULL,
     ora TEXT NOT NULL,
     mesaj TEXT,
+    status TEXT DEFAULT 'confirmat',
+    nota TEXT DEFAULT '',
     created_at TEXT DEFAULT (datetime('now'))
   )
 `);
@@ -228,17 +230,14 @@ app.get('/admin/rezervari', authAdmin, (req, res) => {
 app.post('/admin/login', (req, res) => {
   const { pass } = req.body;
 
-  if (pass !== process.env.ADMIN_PASS) {
-    return res.status(401).json({ error: 'Parolă incorectă' });
+  if (pass === process.env.ADMIN_PASS) {
+    return res.json({
+      success: true,
+      token: process.env.ADMIN_PASS
+    });
   }
 
-  const token = jwt.sign(
-    { role: 'admin' },
-    process.env.JWT_SECRET,
-    { expiresIn: '24h' }
-  );
-
-  res.json({ success: true, token });
+  res.status(401).json({ success: false });
 });
 
 const PORT = process.env.PORT || 3000;

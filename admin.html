@@ -205,10 +205,6 @@ body { background: var(--black); color: var(--white); font-family: var(--font-bo
 <script>
 let TOKEN = '';
 let toateRezervările = [];
-db.exec(`
-ALTER TABLE rezervari ADD COLUMN status TEXT DEFAULT 'confirmat';
-ALTER TABLE rezervari ADD COLUMN nota TEXT DEFAULT '';
-`);
 let filtruBarber = 'toti';
 let filtruData = '';
 let filtruStatus = 'toate';
@@ -230,6 +226,7 @@ async function login() {
     const data = await res.json();
     if (data.success) {
       TOKEN = data.token;
+      console.log("LOGIN RESPONSE:", data);
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
       incarcaRezervari();
