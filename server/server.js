@@ -12,6 +12,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../')));
 
+app.get('/admin/rezervari', (req, res) => {
+  const pass = req.headers['x-admin-pass'];
+  console.log('PASS PRIMIT:', pass);
+  console.log('ADMIN_PASS ENV:', process.env.ADMIN_PASS);
+  if (pass !== process.env.ADMIN_PASS) {
+    return res.status(401).json({ error: 'Acces interzis!' });
+  }
+  // ...restul codului
+});
+
 function authAdmin(req, res, next) {
   const header = req.headers.authorization;
 
